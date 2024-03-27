@@ -24,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20",
+		"@types/qs": "^6.9.14",
 		"@types/react": "^18",
 		"@types/react-blockies": "^1.4.4",
 		"@types/react-dom": "^18",

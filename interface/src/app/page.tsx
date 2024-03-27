@@ -9,8 +9,14 @@ import { getTokenBaseUnits } from "../utils";
 import SavingsService from "../services/savings";
 import { counter_contract } from "../data/constants";
 import SignInWithCoinbaseButton from "@/components/SignInWithCoinbaseButton";
+import fetchmostRecentTx from "./coinbase/transaction/page";
 
-export default function Home({searchParams}) {
+// export default function Home({
+// 	searchParams,
+// }: {
+// 	searchParams: URLSearchParams;
+// }) {
+export default function Home() {
 	const { isWalletConnected, currentNetwork } = useSelector(
 		(state: RootState) => state.wallet
 	);
@@ -28,12 +34,22 @@ export default function Home({searchParams}) {
 	const [savingsContract, setSavingsContract] = useState<string>("");
 	const [successMessage, setSuccessMessage] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
+	const [authInfo, setAuthInfo] = useState<{
+		accessToken: string;
+		refreshToken: string;
+		expiresAt: number;
+		scope: string;
+		coinbaseId: string;
+	} | null>(null);
+	const [accountId, setAccountId] = useState<string | null>(null);
+	const [mostRecentTxId, setMostRecentTxId] = useState<any | null>(null);
+	const [isTxIdInitialized, setIsTxIdInitialized] = useState(false);
 
-	const {authInfo} = searchParams
-	let accessToken
-	if (!!authInfo) accessToken = JSON.parse(authInfo).accessToken
+	// const authInfo = searchParams.get("authInfo");
+	// let accessToken: string;
+	// if (!!authInfo) accessToken = JSON.parse(authInfo).accessToken;
 
-	console.log("authInfo", authInfo)
+	// console.log("authInfo", authInfo);
 
 	const clearState = () => {
 		setAmountInput("");
@@ -162,6 +178,98 @@ export default function Home({searchParams}) {
 		}
 	}, [savingsContract, count]);
 
+	// Fetch `authInfo` directly from URL parameters
+	useEffect(() => {
+		// This code runs only on the client, so `window` object is safe to use
+		const queryParams = new URLSearchParams(window.location.search);
+		const authInfoString = queryParams.get("authInfo");
+		if (authInfoString) {
+			try {
+				const parsedAuthInfo = JSON.parse(
+					decodeURIComponent(authInfoString)
+				);
+				setAuthInfo(parsedAuthInfo);
+			} catch (error) {
+				console.error("Error parsing authInfo:", error);
+			}
+		}
+	}, []);
+
+	useEffect(() => {
+		if (!authInfo) return;
+
+		const fetchAccountId = async () => {
+			const response = await fetch(
+				`https://api.coinbase.com/v2/accounts?limit=100`,
+				{
+					headers: {
+						Authorization: `Bearer ${authInfo.accessToken}`,
+						"CB-VERSION": "2024-03-27",
+					},
+				}
+			);
+
+			if (!response.ok) {
+				console.error("Failed to fetch accounts:", response.statusText);
+				return;
+			}
+
+			const data = await response.json();
+			const ethAccount = data.data.find(
+				(account) => account.currency.code === "ETH"
+			);
+			if (ethAccount) {
+				console.log("Ethereum account ID:", ethAccount.id);
+				setAccountId(ethAccount.id);
+			} else {
+				console.log("Ethereum account not found.");
+			}
+		};
+
+		fetchAccountId();
+	}, [authInfo]);
+
+	// Start the interval to fetch most recent transaction
+	useEffect(() => {
+		if (!authInfo || !accountId) return;
+
+		const intervalId = setInterval(() => {
+			fetchmostRecentTx(
+				setMostRecentTxId,
+				authInfo.accessToken,
+				accountId
+			)
+				.then((transaction) => {
+					// Check if transaction exists and has an ID
+					if (transaction && transaction.id) {
+						// Condition to avoid considering the first setting of mostRecentTxId as a new transaction
+						if (
+							isTxIdInitialized &&
+							transaction.id !== mostRecentTxId
+						) {
+							console.log(
+								"New transaction detected:",
+								transaction.id
+							);
+						}
+						// Update state only if it's different from the current state to avoid unnecessary renders
+						if (transaction.id !== mostRecentTxId) {
+							setMostRecentTxId(transaction.id);
+							setIsTxIdInitialized(true); // Mark as initialized after the first successful fetch
+						}
+					}
+				})
+				.catch((error) => {
+					console.error(
+						"Failed to fetch the most recent transaction:",
+						error
+					);
+				});
+		}, 5000);
+
+		return () => clearInterval(intervalId);
+	}, [authInfo, accountId, mostRecentTxId]);
+
 	return (
 		<div className="flex w-full flex-1 flex-col items-center justify-start py-10">
 			<div className="flex min-h-fit w-full max-w-3xl flex-col px-4">
@@ -213,7 +321,7 @@ export default function Home({searchParams}) {
 								+ Count
 							</button>
 
-							<SignInWithCoinbaseButton />
+							{!authInfo && <SignInWithCoinbaseButton />}
 						</>
 					) : (
 						<>
