@@ -36,18 +36,16 @@ export default function SignInWithCoinbaseButton() {
 	}
 
 	return (
-		<div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm lg:flex">
-			<button
-				style={
-					{
-						"--offset-border-color": "#395754", // dark-200
-					} as React.CSSProperties
-				}
-				className="mt-3 *:offset-border flex h-12 shrink-0 items-center justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
-				onClick={handleClick}
-			>
-				Sign in with Coinbase
-			</button>
-		</div>
+		<button
+			style={
+				{
+					"--offset-border-color": "#395754", // dark-200
+				} as React.CSSProperties
+			}
+			className="mt-3 *:offset-border flex h-12 shrink-0 items-center justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
+			onClick={handleClick}
+		>
+			Sign in with Coinbase
+		</button>
 	);
 }

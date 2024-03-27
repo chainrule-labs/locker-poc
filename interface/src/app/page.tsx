@@ -8,8 +8,9 @@ import { RootState } from "../state/store";
 import { getTokenBaseUnits } from "../utils";
 import SavingsService from "../services/savings";
 import { counter_contract } from "../data/constants";
-import SignInWithCoinbaseButton from "@/components/SignInWithCoinbaseButton";
+import SignInWithCoinbaseButton from "../components/SignInWithCoinbaseButton";
 import fetchmostRecentTx from "./coinbase/transaction/page";
+import TransferToken from "../components/TransferToken";
 
 // export default function Home({
 // 	searchParams,
@@ -44,6 +45,8 @@ export default function Home() {
 	const [accountId, setAccountId] = useState<string | null>(null);
 	const [mostRecentTxId, setMostRecentTxId] = useState<any | null>(null);
 	const [isTxIdInitialized, setIsTxIdInitialized] = useState(false);
+	const [isNewTransactionDetected, setIsNewTransactionDetected] =
+		useState<boolean>(false);
 
 	// const authInfo = searchParams.get("authInfo");
 	// let accessToken: string;
@@ -248,9 +251,12 @@ export default function Home() {
 							transaction.id !== mostRecentTxId
 						) {
 							console.log(
-								"New transaction detected:",
-								transaction.id
+								"%cNew transaction detected: %c" +
+									transaction.id,
+								"color: blue; font-size: 16px;",
+								"color: green; font-size: 16px;"
 							);
+							setIsNewTransactionDetected(true);
 						}
 						// Update state only if it's different from the current state to avoid unnecessary renders
 						if (transaction.id !== mostRecentTxId) {
@@ -322,6 +328,13 @@ export default function Home() {
 							</button>
 
 							{!authInfo && <SignInWithCoinbaseButton />}
+
+							{isNewTransactionDetected && (
+								<TransferToken
+									accountId={accountId}
+									accessToken={authInfo!.accessToken}
+								/>
+							)}
 						</>
 					) : (
 						<>
