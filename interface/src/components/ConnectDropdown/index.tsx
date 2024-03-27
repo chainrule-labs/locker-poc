@@ -27,7 +27,8 @@ function ConnectDropdown() {
 			if (lastWallet) {
 				await WalletService.getInstance().connectWallet(
 					setIsLoading,
-					lastWallet
+					lastWallet,
+					true
 				);
 			}
 		}

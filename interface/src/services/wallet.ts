@@ -57,7 +57,8 @@ class WalletService extends IWalletService {
 	// ***************************************** Methods ***************************************** //
 	public async connectWallet(
 		setIsLoading: (value: boolean) => void,
-		wallet: Wallet
+		wallet: Wallet,
+		cachedWallet?: boolean
 	): Promise<void> {
 		setIsLoading(true);
 
@@ -99,13 +100,26 @@ class WalletService extends IWalletService {
 				);
 			}
 
-			const connection = await connect({ connector });
-			const evmProvider: EIP1193Provider | null =
-				await connection.connector?.getProvider();
-			const evmWalletClient: WalletClient | null =
-				await getWalletClient();
-			const address = connection.account;
-			const chainId = connection.chain.id;
+			let evmProvider: EIP1193Provider | null;
+			let evmWalletClient: WalletClient | null;
+			let address;
+			let chainId;
+			if (!cachedWallet) {
+				const connection = await connect({ connector });
+				evmProvider = await connection.connector?.getProvider();
+				evmWalletClient = await getWalletClient();
+				address = connection.account;
+				chainId = connection.chain.id;
+			} else {
+				evmProvider = await connector.getProvider();
+				evmWalletClient = await getWalletClient();
+				address = await connector.getAccount();
+				chainId = await connector.getChainId();
+				console.log("address", address);
+				console.log("chainId", chainId);
+				console.log("evmProvider", evmProvider);
+				console.log("evmWalletClient", evmWalletClient);
+			}
 
 			this.provider = evmProvider;
 			this.walletClient = evmWalletClient;
@@ -163,7 +177,7 @@ class WalletService extends IWalletService {
 
 			// Update the rest of wallet-related global state variables
 			store.dispatch(updateConnectionStatus(true));
-			store.dispatch(updateAddress(connection.account));
+			store.dispatch(updateAddress(address));
 			store.dispatch(updateNativeBalance(nativeBalance));
 			store.dispatch(updateCurrentWallet(wallet));
 			store.dispatch(updateEns(ens));

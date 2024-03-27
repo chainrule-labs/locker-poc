@@ -12,7 +12,8 @@ export abstract class IWalletService {
 
 	abstract connectWallet(
 		setIsLoading: (value: boolean) => void,
-		wallet: Wallet
+		wallet: Wallet,
+		cachedWallet?: boolean
 	): Promise<void>;
 
 	abstract disconnectWallet(): Promise<void>;
