@@ -158,13 +158,13 @@ export default function Home() {
 		<div className="flex w-full flex-1 flex-col items-center justify-start py-10">
 			<div className="flex min-h-fit w-full max-w-3xl flex-col px-4">
 				<h1 className="mb-5 w-fit border-b border-b-primary-100 pb-1 text-2xl font-bold">
-					Auto Hodl
+					Locker
 				</h1>
 				{!isWalletConnected || !currentNetwork?.isSupported ? (
 					<>
 						<span>
 							Create a smart contract micro-savings account with
-							Auto Hodl.
+							Locker.
 						</span>
 						<span className="mt-5">
 							Connect your wallet to start saving!

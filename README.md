@@ -1,6 +1,6 @@
-# Auto HODL
+# Locker
 
-Auto HODL is a consumer DeFi framework for automatically saving a small amount of tokens as users perform their normal on-chain activity. In other words, Auto HODL is an on-chain equivalent of [Acorns](https://www.acorns.com/) and other round-up savings tools.
+Locker is a consumer DeFi framework for automatically saving a small amount of tokens as users perform their normal on-chain activity. In other words, Locker is an on-chain equivalent of [Acorns](https://www.acorns.com/) and other round-up savings tools.
 
 [ETH Denver 2024 presentation](https://docs.google.com/presentation/d/1a946eixqBip8SjOVe2Uf69EXOgODFZ3A_THlTs5XUBc/edit?usp=sharing)
 
@@ -17,7 +17,7 @@ Auto HODL is a consumer DeFi framework for automatically saving a small amount o
 
 1. Alice sets up a Savings Contract and defines how much she wants to put in to savings for every transaction and what the Lockup Period will be.
 1. Alice wants to do a swap on the Target Contract, 1inch, for 100 USDC to ETH
-1. Auto HODL intercepts Alice's transaction and asks for a small amount of additional token before Alice signs the transaction.
+1. Locker intercepts Alice's transaction and asks for a small amount of additional token before Alice signs the transaction.
 1. The transaction is sent to the Savings Contract which deposits the extra amount into savings.
 1. The Savings Contract forwards the swap request to the Target Contract (1inch) which processes the transaction normally.
 1. After the Unlock Date, Alice can withdraw all her savings.
@@ -26,7 +26,7 @@ Auto HODL is a consumer DeFi framework for automatically saving a small amount o
 
 This code currently implements v1 in the diagram below. In the future, we plan on streamlining by integrating with Metamask snaps and 4337 account abstraction.
 
-![Auto HODL design](auto-hodl-design.jpg)
+![Locker design](auto-hodl-design.jpg)
 
 ## Getting started
 

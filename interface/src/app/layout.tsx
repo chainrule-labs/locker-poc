@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://test.io"),
-	title: "Auto Hodl",
+	title: "Locker",
 	description: "test",
 	keywords: [
 		"Open-Source",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
 		],
 	},
 	// openGraph: {
-	// 	title: "Auto Hodl",
+	// 	title: "Locker",
 	// 	description:
 	// 		"test",
 	// 	url: "https://test.io",
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
 	// 	],
 	// },
 	// twitter: {
-	// 	title: "Auto Hodl",
+	// 	title: "Locker",
 	// 	description:
 	// 		"test",
 	// 	card: "summary_large_image",

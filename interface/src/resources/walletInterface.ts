@@ -136,7 +136,7 @@ const connectors = [
 	}),
 	new CoinbaseWalletConnector({
 		options: {
-			appName: "Auto Hodl",
+			appName: "Locker",
 			darkMode: true,
 		},
 	}),
