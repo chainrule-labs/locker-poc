@@ -149,6 +149,7 @@ class SavingsService extends ISavingsService {
 	}
 
 	public async entryPoint(
+		amountString: string,
 		savingsContract: `0x${string}`,
 		setErrorMessage: (value: string) => void,
 		setSuccessMessage: (value: string) => void,
@@ -171,7 +172,7 @@ class SavingsService extends ISavingsService {
 				abi: savingsAbi,
 				functionName: "entryPoint",
 				args: [counter as `0x${string}`, callData],
-				value: parseEther("0.0001"),
+				value: parseEther(amountString),
 			});
 
 			const txReceipt = await waitForTransaction({

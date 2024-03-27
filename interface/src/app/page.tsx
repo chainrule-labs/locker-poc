@@ -88,6 +88,7 @@ export default function Home() {
 
 	const incrementCount = async () => {
 		await SavingsService.getInstance().entryPoint(
+			saveAmount,
 			savingsContract as `0x${string}`,
 			setErrorMessage,
 			setSuccessMessage,

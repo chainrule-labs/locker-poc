@@ -25,6 +25,7 @@ export abstract class ISavingsService {
 	): Promise<void>;
 
 	abstract entryPoint(
+		amountString: string,
 		savingsContract: `0x${string}`,
 		setErrorMessage: (value: string) => void,
 		setSuccessMessage: (value: string) => void,
