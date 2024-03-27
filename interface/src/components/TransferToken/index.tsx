@@ -6,18 +6,16 @@ const COINBASE_API_URL = "https://api.coinbase.com/v2";
 
 // 2FA flow
 // https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-with-coinbase-2fa
-const TransferToken: React.FC<{ accountId: string; accessToken: string }> = ({
-	accountId,
-	accessToken,
-}) => {
+export default function TransferToken({ accountId, accessToken }) {
 	const [tfaRequested, setTfaRequested] = useState(false);
+	const [successfulTransfer, setSuccessfulTransfer] = useState(false);
 	const [tfa, setTfa] = useState(false);
 	const token = "ETH";
-	const to = "0x7C104a8fD81297FbfDf8edc1d234cBadAc7B60A5";
+	const to = "0xDe076D651613C7bde3260B8B69C860D67Bc16f49";
 	// const amount = '1.00'
 	// const amount = '0.01'
 	const amount = "0.00011";
-	const networkName = "base";
+	const networkName = "Ethereum Mainnet";
 
 	//   Transfer: https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-transactions#send-money
 	const transferUrl = `${COINBASE_API_URL}/accounts/${accountId}/transactions`;
@@ -27,8 +25,6 @@ const TransferToken: React.FC<{ accountId: string; accessToken: string }> = ({
 		amount,
 		currency: token,
 		description: "For the thing",
-		new_version_opt_in: true,
-		network_name: networkName,
 	};
 
 	console.log("transferParams", transferParams);
@@ -107,23 +103,49 @@ const TransferToken: React.FC<{ accountId: string; accessToken: string }> = ({
 		});
 
 		const txBody = await txResponse.json();
+
+		if (txResponse.ok) {
+			setSuccessfulTransfer(true);
+		} else {
+			throw new Error(`Error transferring from Coinbase.`);
+		}
+
 		console.log("txBody2", txBody);
 	};
 
 	return (
 		<div className="mt-5">
-			<p>2FA Code: {tfa}</p>
-			<button
-				onClick={sendTx}
-				style={
-					{
-						"--offset-border-color": "#395754", // dark-200
-					} as React.CSSProperties
-				}
-				className="mt-3 *:offset-border flex h-20 shrink-0 items-center text-start justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
-			>
-				Transfer {amount} {token} to {to} on {networkName}
-			</button>
+			{successfulTransfer ? (
+				<div className="mt-2 flex w-full flex-col items-center justify-center text-sm">
+					<span className="break-all text-good-accent">
+						Successfull Transfer!
+					</span>
+					<a
+						className=" mt-5 text-blue-500 hover:text-blue-400"
+						href={`https://etherscan.io/address/${to}`}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<span>View on explorer</span>
+					</a>
+				</div>
+			) : (
+				<>
+					<p>2FA Code: {tfa}</p>
+					<button
+						onClick={sendTx}
+						style={
+							{
+								"--offset-border-color": "#395754", // dark-200
+							} as React.CSSProperties
+						}
+						className="mt-3 *:offset-border flex h-20 shrink-0 items-center text-start justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
+					>
+						Transfer {token} from Coinbase to your savings contract
+						on {networkName}
+					</button>
+				</>
+			)}
 		</div>
 	);
-};
+}

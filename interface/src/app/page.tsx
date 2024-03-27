@@ -329,12 +329,14 @@ export default function Home() {
 
 							{!authInfo && <SignInWithCoinbaseButton />}
 
-							{isNewTransactionDetected && (
+							{isNewTransactionDetected &&
+							authInfo &&
+							accountId ? (
 								<TransferToken
 									accountId={accountId}
 									accessToken={authInfo!.accessToken}
 								/>
-							)}
+							) : null}
 						</>
 					) : (
 						<>
