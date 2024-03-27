@@ -8,8 +8,9 @@ import { RootState } from "../state/store";
 import { getTokenBaseUnits } from "../utils";
 import SavingsService from "../services/savings";
 import { counter_contract } from "../data/constants";
+import SignInWithCoinbaseButton from "@/components/SignInWithCoinbaseButton";
 
-export default function Home() {
+export default function Home({searchParams}) {
 	const { isWalletConnected, currentNetwork } = useSelector(
 		(state: RootState) => state.wallet
 	);
@@ -27,6 +28,12 @@ export default function Home() {
 	const [savingsContract, setSavingsContract] = useState<string>("");
 	const [successMessage, setSuccessMessage] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
+
+	const {authInfo} = searchParams
+	let accessToken
+	if (!!authInfo) accessToken = JSON.parse(authInfo).accessToken
+
+	console.log("authInfo", authInfo)
 
 	const clearState = () => {
 		setAmountInput("");
@@ -205,6 +212,8 @@ export default function Home() {
 							>
 								+ Count
 							</button>
+
+							<SignInWithCoinbaseButton />
 						</>
 					) : (
 						<>
