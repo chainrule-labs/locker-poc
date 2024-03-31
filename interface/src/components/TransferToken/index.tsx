@@ -6,7 +6,7 @@ const COINBASE_API_URL = "https://api.coinbase.com/v2";
 
 // 2FA flow
 // https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-with-coinbase-2fa
-export default function TransferToken({ accountId, accessToken }) {
+export default function TransferToken({ accountId, accessToken }: any) {
 	const [tfaRequested, setTfaRequested] = useState(false);
 	const [successfulTransfer, setSuccessfulTransfer] = useState(false);
 	const [tfa, setTfa] = useState(false);
@@ -43,7 +43,7 @@ export default function TransferToken({ accountId, accessToken }) {
 		setTfaRequested(true);
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: any) => {
 		event.preventDefault();
 		const formVal = event.target.elements.tfaInput.value;
 		console.log("formVal", formVal);
@@ -100,7 +100,7 @@ export default function TransferToken({ accountId, accessToken }) {
 				"CB-VERSION": "2024-03-27",
 			},
 			body: JSON.stringify(transferParams),
-		});
+		} as any);
 
 		const txBody = await txResponse.json();
 
@@ -140,7 +140,7 @@ export default function TransferToken({ accountId, accessToken }) {
 						}
 						className="mt-3 *:offset-border flex h-20 shrink-0 items-center text-start justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
 					>
-						Coinbase transfer deactivated
+						Coinbase transfer temporarily deactivated
 					</button>
 				</>
 			)}

@@ -1,4 +1,3 @@
-import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import qs from "qs";
 
@@ -15,11 +14,11 @@ interface CoinbaseState {
 }
 
 // https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-with-coinbase-integration#2-coinbase-redirects-back-to-your-site
-export default async function GET(req: NextRequest) {
+export async function GET(req: Request) {
 	console.log("processing coinbase callback");
 	console.log(req);
 
-	const url = new URL(req.url);
+	const url = new URL(req.url!);
 	const stateParam = url.searchParams.get("state");
 	const codeParam = url.searchParams.get("code");
 
@@ -61,11 +60,7 @@ export default async function GET(req: NextRequest) {
 		data: { id: coinbaseId },
 	} = responseJson;
 
-	// Prod
-	//   const host = '';
-
-	// Dev
-	const host = "http://localhost:3000";
+	const host = process.env.CALLBACK_REDIRECT_HOST
 
 	const authInfo = {
 		accessToken: coinbaseKeys.access_token,

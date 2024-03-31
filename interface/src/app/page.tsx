@@ -219,7 +219,7 @@ export default function Home() {
 
 			const data = await response.json();
 			const ethAccount = data.data.find(
-				(account) => account.currency.code === "ETH"
+				(account: any) => account.currency.code === "ETH"
 			);
 			if (ethAccount) {
 				console.log("Ethereum account ID:", ethAccount.id);
@@ -282,6 +282,9 @@ export default function Home() {
 				<h1 className="mb-5 w-fit border-b border-b-primary-100 pb-1 text-2xl font-bold">
 					Locker
 				</h1>
+				<h2 className="mb-5 text-lg font-bold text-primary-100">
+					WARNING: DEMO ONLY. Do not attempt to save large amounts of ETH.
+				</h2>
 				{!isWalletConnected || !currentNetwork?.isSupported ? (
 					<>
 						<span>
