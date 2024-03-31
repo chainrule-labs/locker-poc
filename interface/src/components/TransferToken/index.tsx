@@ -133,7 +133,6 @@ export default function TransferToken({ accountId, accessToken }) {
 				<>
 					<p>2FA Code: {tfa}</p>
 					<button
-						onClick={sendTx}
 						style={
 							{
 								"--offset-border-color": "#395754", // dark-200
@@ -141,8 +140,7 @@ export default function TransferToken({ accountId, accessToken }) {
 						}
 						className="mt-3 *:offset-border flex h-20 shrink-0 items-center text-start justify-center bg-dark-500 px-2 outline-none hover:bg-dark-400 hover:text-primary-100 mb-4"
 					>
-						Transfer {token} from Coinbase to your savings contract
-						on {networkName}
+						Coinbase transfer deactivated
 					</button>
 				</>
 			)}
